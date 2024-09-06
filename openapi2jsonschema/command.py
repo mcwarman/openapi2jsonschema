@@ -127,12 +127,12 @@ def default(output, schema, prefix, stand_alone, expanded, kubernetes, strict):
         components = data["components"]["schemas"]
 
     for title in components:
-        kind = title.split(".")[-1].lower()
+        kind = title.split(".")[-1]
         if kubernetes:
             group = title.split(".")[-3].lower()
             api_version = title.split(".")[-2].lower()
         specification = components[title]
-        specification["$schema"] = "http://json-schema.org/schema#"
+        specification["$schema"] = "http://json-schema.org/draft-07/schema"
         specification.setdefault("type", "object")
 
         if strict:
@@ -205,7 +205,7 @@ def default(output, schema, prefix, stand_alone, expanded, kubernetes, strict):
 
             with open("%s/%s.json" % (output, full_name), "w") as schema_file:
                 debug("Generating %s.json" % full_name)
-                schema_file.write(json.dumps(specification, indent=2))
+                schema_file.write(json.dumps(specification, indent=2, sort_keys=False))
         except Exception as e:
             error("An error occured processing %s: %s" % (kind, e))
 
